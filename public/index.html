@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+name="theme-color"
+content="#08783c"
+>
+
+<title>AgriNova Guinée</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="https://agrinova-guinee.web.app/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="https://agrinova-guinee.web.app/icons/apple-touch-icon.png">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Arial,sans-serif
+}
+
+body{
+background:#f4f8f4;
+color:#173b1c
+}
+
+header{
+background:linear-gradient(135deg,#056b35,#13a35a);
+color:white;
+padding:22px;
+border-radius:0 0 25px 25px;
+position:relative
+}
+
+.logo{
+font-size:27px;
+font-weight:bold
+}
+
+.slogan{
+font-size:13px;
+margin-top:7px;
+opacity:.9
+}
+
+.container{
+max-width:950px;
+margin:auto;
+padding:18px
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:18px;
+margin-bottom:18px;
+box-shadow:0 4px 15px #0000000d
+}
+
+h1,h2,h3{
+margin-bottom:12px
+}
+
+input,select,textarea{
+width:100%;
+padding:13px;
+margin:7px 0;
+border:1px solid #d7e0d8;
+border-radius:11px;
+font-size:15px
+}
+
+button{
+border:0;
+background:#08783c;
+color:white;
+padding:12px 17px;
+border-radius:10px;
+font-weight:bold;
+margin-top:7px;
+cursor:pointer
+}
+
+button.secondary{
+background:#555
+}
+
+button.danger{
+background:#c62828
+}
+
+button.orange{
+background:#e68a00
+}
+
+button.primary{
+background:#2e7d32
+}
+
+.hidden{
+display:none!important
+}
+
+nav{
+display:flex;
+gap:8px;
+overflow:auto;
+padding:5px 0 15px
+}
+
+nav button{
+white-space:nowrap
+}
+
+.hero{
+text-align:center;
+padding:30px 15px
+}
+
+.hero-icon{
+font-size:60px
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+
+.stat{
+background:#edf8ef;
+border-radius:15px;
+padding:16px
+}
+
+.stat strong{
+font-size:28px;
+display:block;
+color:#08783c
+}
+
+.products{
+display:grid;
+gap:14px
+}
+
+.product{
+background:white;
+padding:16px;
+border-radius:17px;
+box-shadow:0 3px 12px #0000000c
+}
+
+.product-icon{
+font-size:38px
+}
+
+.price{
+font-size:19px;
+font-weight:bold;
+color:#08783c;
+margin:8px 0
+}
+
+.info{
+color:#637067;
+line-height:1.7;
+font-size:14px
+}
+
+.badge{
+display:inline-block;
+background:#e5f6e9;
+color:#08783c;
+padding:5px 9px;
+border-radius:20px;
+font-size:12px
+}
+
+.auth-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px
+}
+
+@media(max-width:700px){
+.auth-grid{
+grid-template-columns:1fr
+}
+}
+
+.empty{
+padding:30px;
+text-align:center;
+color:#69736b
+}
+
+footer{
+text-align:center;
+padding:30px;
+color:#69736b;
+font-size:13px
+}
+
+#toast{
+position:fixed;
+bottom:20px;
+left:15px;
+right:15px;
+background:#173b1c;
+color:white;
+padding:15px;
+border-radius:12px;
+display:none;
+z-index:9999;
+text-align:center
+}
+
+#message {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  z-index: 9999;
+  max-width: 90%;
+  text-align: center;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+</div>
+
+<div class="slogan">
+Du champ au marché, le numérique au service de l'agriculteur guinéen.
+</div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- AUTH -->
+
+<section id="authSection">
+
+<div class="hero card">
+
+<div class="hero-icon">🌾</div>
+
+<h1>Bienvenue sur AgriNova</h1>
+
+<p>
+Le marché agricole numérique de Guinée.
+</p>
+
+</div>
+
+
+<div class="auth-grid">
+
+<div class="card">
+
+<h2>🔐 Connexion</h2>
+
+<input
+id="loginEmail"
+type="email"
+placeholder="Email"
+>
+
+<input
+id="loginPassword"
+type="password"
+placeholder="Mot de passe"
+>
+
+<button onclick="login()">
+Se connecter
+</button>
+
+<p style="margin-top:10px;"><a href="index.html#" onclick="resetPassword(); return false;">Mot de passe oublié ?</a></p>
+<p style="font-size:12px;color:#666;margin-top:4px;">Pensez à vérifier vos spams si vous ne recevez rien.</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>📝 Créer un compte</h2>
+
+<input
+id="registerName"
+placeholder="Nom complet"
+>
+
+<input
+id="registerPhone"
+placeholder="Téléphone"
+>
+
+<input
+id="registerEmail"
+type="email"
+placeholder="Email"
+>
+
+<input
+id="registerPassword"
+type="password"
+placeholder="Mot de passe (6 caractères minimum)"
+>
+
+<select id="registerRole">
+
+<option value="producteur">Producteur
+</option>
+
+<option value="acheteur">Acheteur
+</option>
+
+</select>
+
+<input
+id="registerLocation"
+placeholder="Ville / Localité"
+>
+
+<button onclick="register()">
+Créer mon compte
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+<!-- APPLICATION -->
+
+<section id="appSection" class="hidden">
+
+<nav>
+
+<button onclick="showDashboard()">Tableau de bord</button>
+</button>
+
+<button onclick="showMarketplace()">Marketplace</button>
+<button onclick="showMyAds()">Mes annonces</button>
+<button onclick="showOrders()">Commandes</button></button>
+
+<button id="publishButton" onclick="showPublish()">
+ Publier
+</button>
+
+<button id="adminButton" onclick="window.location.href='admin.html'" class="hidden">
+  Administration
+</button>
+
+<button onclick="logout()">Déconnexion</button>
+</button>
+
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<div id="dashboard">
+
+<div class="card">
+
+<h2>📊 Tableau de bord</h2>
+
+<p id="welcome"></p>
+
+<br>
+
+<div class="stats">
+
+<div class="stat" onclick="showMarketplace()" style="cursor:pointer;">
+
+<strong id="statProducts">
+0
+</strong>
+
+Produits
+
+</div>
+
+<div class="stat">
+
+<strong id="statUsers">
+0
+</strong>
+
+Utilisateurs
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>👤 Mon profil</h3>
+
+<p id="profile"></p>
+
+</div>
+
+</div>
+
+
+<!-- MARKETPLACE -->
+
+<div id="marketplace" class="hidden">
+
+<div class="card">
+
+<h2>🛒 Marketplace agricole</h2>
+
+<input
+id="searchInput"
+placeholder="🔎 Rechercher pommes de terre, maïs..."
+oninput="loadProducts()"
+>
+
+</div>
+
+<div id="productsList"></div>
+<div id="productsListCount" style="text-align:center;padding:8px;color:#666;font-size:14px;"></div>
+
+</div>
+
+
+<div id="myads" class="hidden">
+<div class="card">
+<h2>Mes annonces</h2>
+</div>
+<div id="myAdsList"></div>
+<div id="myAdsListCount" style="text-align:center;padding:8px;color:#666;font-size:14px;"></div>
+</div>
+<!-- COMMANDES -->
+<div id="orders" class="hidden">
+<div class="card">
+<h2>Mes commandes</h2>
+</div>
+<div id="myOrdersList"></div>
+<div class="card">
+<h2>Commandes recues</h2>
+</div>
+<div id="receivedOrdersList"></div>
+</div>
+<!-- PUBLICATION -->
+
+<div id="publish" class="hidden">
+
+<div class="card">
+
+<h2>📦 Publier un produit</h2>
+
+<input
+id="productName"
+placeholder="Nom du produit"
+>
+
+<input id="productQuantity" type="number" placeholder="Quantité">
+<select id="productUnit"><option value="kg">kg</option><option value="sacs">sacs</option><option value="tonnes">tonnes</option></select>
+
+<input id="productPrice" type="number" placeholder="Prix en GNF">
+
+<input
+id="productLocation"
+placeholder="Localisation"
+>
+
+<select id="productCategory">
+
+<option value="legumes">Légumes
+</option>
+
+<option value="cereales">Céréales
+</option>
+
+<option value="fruits">Fruits
+</option>
+
+<option value="tubercules">Tubercules
+</option>
+
+<option value="autres">Autres
+</option>
+
+</select>
+
+<input type="file" id="productImage" accept="image/*" style="margin-bottom:10px;">
+<button onclick="publishProduct()">Publier le produit
+</button>
+
+</div>
+
+</div>
+
+
+</section>
+
+</div>
+
+
+<div id="message"></div>
+
+
+<footer>
+
+AgriNova Guinée © 2026<br>
+Pita • Moyenne-Guinée • Guinée
+
+</footer>
+
+
+<script type="module">
+window.addEventListener("unhandledrejection", function(e) { alert("ERREUR PROMESSE: " + e.reason); });
+window.onerror = function(msg, url, line, col, error) { alert("ERREUR JS: " + msg + " | Ligne: " + line); };
+
+import {
+initializeApp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut,
+  sendPasswordResetEmail,
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
+import {
+getFirestore,
+runTransaction,
+serverTimestamp,
+collection,
+addDoc,
+setDoc,
+getDoc,
+getDocs,
+doc,
+deleteDoc,
+query,
+where,
+orderBy,
+onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
+
+
+import {
+firebaseConfig
+} from "./firebase-config.js";
+
+
+const app =
+initializeApp(firebaseConfig);
+
+
+const auth =
+getAuth(app);
+
+
+const db =
+getFirestore(app);
+const storage = getStorage(app);
+
+
+let currentUser = null;
+
+let currentProfile = null;
+
+
+window.showMessage = function(text) {
+
+const box =
+document.getElementById("message");
+
+box.innerText = text;
+
+box.style.display = "block";
+
+setTimeout(() => {
+
+box.style.display = "none";
+
+},3000);
+
+};
+
+
+window.register = async function() {
+
+const name =
+document.getElementById("registerName").value.trim();
+
+const phone =
+document.getElementById("registerPhone").value.trim();
+
+const email =
+document.getElementById("registerEmail").value.trim();
+
+const password =
+document.getElementById("registerPassword").value;
+
+const role =
+document.getElementById("registerRole").value;
+
+const location =
+document.getElementById("registerLocation").value.trim();
+
+
+if(!name || !email || !password || !role) {
+
+showMessage("Veuillez remplir les champs obligatoires.");
+
+return;
+
+}
+
+
+try {
+
+const result =
+await createUserWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+
+await setDoc(
+doc(db,"users",result.user.uid),
+{
+
+name,
+phone,
+email,
+role,
+location,
+
+createdAt:
+new Date().toISOString()
+
+}
+);
+
+
+showMessage("Compte créé avec succès.");
+
+}
+
+catch(error) {
+
+showMessage(error.message);
+
+}
+
+};
+
+
+window.login = async function() {
+
+const email =
+document.getElementById("loginEmail").value.trim();
+
+const password =
+document.getElementById("loginPassword").value;
+
+
+try {
+
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+showMessage("Connexion réussie.");
+
+}
+
+catch(error) {
+
+showMessage("Email ou mot de passe incorrect.");
+
+}
+
+};
+
+
+window.resetPassword = async function() {
+
+  const email = document.getElementById("loginEmail").value.trim();
+
+  if (!email) {
+    showMessage("Veuillez saisir votre email ci-dessus, puis cliquer sur le lien.", "err");
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMessage("Un email de reinitialisation a ete envoye a " + email + ".");
+  } catch (err) {
+    showMessage("Erreur: " + err.message, "err");
+  }
+};
+
+window.logout = async function() {
+
+await signOut(auth);
+
+showMessage("Déconnexion réussie.");
+
+};
+
+
+onAuthStateChanged(
+auth,
+async user => {
+
+if(user) {
+
+currentUser = user;
+
+const profileDoc =
+await getDoc(
+doc(db,"users",user.uid)
+);
+
+if(profileDoc.exists()) {
+
+currentProfile =
+profileDoc.data();
+
+}
+
+document
+.getElementById("authSection")
+.classList.add("hidden");
+
+document
+.getElementById("appSection")
+.classList.remove("hidden");
+
+
+document
+.getElementById("welcome")
+.innerText =
+"Bienvenue " +
+(currentProfile?.name || user.email);
+
+
+document
+.getElementById("profile")
+.innerHTML =
+
+"👤 <b>" +
+(currentProfile?.name || "") +
+"</b><br>" +
+
+"📧 " +
+(currentProfile?.email || "") +
+"<br>" +
+
+"📱 " +
+(currentProfile?.phone || "") +
+"<br>" +
+
+"📍 " +
+(currentProfile?.location || "") +
+"<br>" +
+
+"🎯 Rôle : " +
+(currentProfile?.role || "");
+
+
+if(currentProfile?.role !== "producteur") {
+
+document
+.getElementById("publishButton")
+.classList.add("hidden");
+
+}
+
+if(currentProfile?.role === "admin") {
+  document.getElementById("adminButton").classList.remove("hidden");
+  const usersCard = document.getElementById("statUsersCard");
+  if (usersCard) {
+  usersCard.style.cursor = "pointer";
+  usersCard.onclick = () => window.location.href = "admin.html";
+  }
+}
+
+
+await loadProducts();
+
+await updateStats();
+
+}
+
+else {
+
+currentUser = null;
+
+document
+.getElementById("authSection")
+.classList.remove("hidden");
+
+document
+.getElementById("appSection")
+.classList.add("hidden");
+
+}
+
+});
+
+
+window.publishProduct = async function() {
+
+if(!currentUser) {
+
+showMessage("Vous devez être connecté.");
+
+return;
+
+}
+
+
+if(currentProfile?.role !== "producteur") {
+
+showMessage("Seuls les producteurs peuvent publier.");
+
+return;
+
+}
+
+
+const name =
+document.getElementById("productName").value.trim();
+
+const quantity = Number(
+document.getElementById("productQuantity").value.trim());
+
+const unit = document.getElementById("productUnit").value;
+const price = Number(
+document.getElementById("productPrice").value.trim());
+
+const location =
+document.getElementById("productLocation").value.trim();
+
+const category =
+document.getElementById("productCategory").value;
+
+
+if(!name || !quantity || !price || !location) {
+
+showMessage("Veuillez remplir tous les champs.");
+
+return;
+
+}
+
+
+try {
+
+let imageUrl = "";
+const imageFile = document.getElementById("productImage").files[0];
+if (imageFile) {
+  const imgRef = ref(storage, "products/" + Date.now() + "_" + imageFile.name);
+  await uploadBytes(imgRef, imageFile);
+  imageUrl = await getDownloadURL(imgRef);
+}
+
+await addDoc(
+collection(db,"products"),
+{
+
+name,
+quantity,
+unit,
+price,
+location,
+category,
+  imageUrl,
+
+sellerId:
+currentUser.uid,
+
+sellerName:
+currentProfile.name,
+
+sellerPhone:
+currentProfile.phone || "",
+
+status:
+"disponible",
+
+createdAt:
+new Date().toISOString()
+
+}
+);
+
+
+showMessage("🌱 Produit publié avec succès.");
+
+document
+.getElementById("productName")
+.value = "";
+
+document
+.getElementById("productQuantity")
+.value = "";
+
+document
+.getElementById("productPrice")
+.value = "";
+
+document
+.getElementById("productLocation")
+.value = "";
+
+await loadProducts();
+
+showMarketplace();
+      await updateStats();
+
+}
+
+catch(error) {
+
+console.error(error);
+
+showMessage("Erreur: " + error.message);
+
+}
+
+};
+
+
+window.loadProducts = async function(listId, mineOnly) {
+
+const list =
+document.getElementById(listId || "productsList");
+
+if(!list) return;
+
+
+list.innerHTML =
+"<div class='card'>Chargement...</div>";
+
+
+try {
+
+const snapshot =
+await getDocs(
+collection(db,"products")
+);
+
+
+const search =
+(document.getElementById("searchInput")?.value || "")
+.toLowerCase();
+
+
+list.innerHTML = "";
+
+
+let count = 0;
+
+
+snapshot.forEach(productDoc => {
+
+const p =
+productDoc.data();
+
+if (mineOnly && (!currentUser || p.sellerId !== currentUser.uid)) { return; }
+        if (!mineOnly && Number(p.quantity) <= 0) { return; }
+
+if(
+search &&
+!(
+p.name || ""
+).toLowerCase().includes(search)
+) {
+
+return;
+
+}
+
+
+count++;
+
+
+const div =
+document.createElement("div");
+
+div.className =
+"product";
+
+
+let icon = "🌱";
+
+if(p.category === "tubercules")
+icon = "🥔";
+
+if(p.category === "cereales")
+icon = "🌽";
+
+if(p.category === "legumes")
+icon = "🥕";
+
+if(p.category === "fruits")
+icon = "🍊";
+
+
+div.innerHTML = `
+
+<div class="product-icon">
+${p.imageUrl ? `<img src="https://agrinova-guinee.web.app/${escapeHTML(p.imageUrl)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">` : icon}
+</div>
+
+<h3>
+${escapeHTML(p.name)}
+</h3>
+
+<span class="badge">
+${p.quantity <= 0 ? "vendu" : escapeHTML(p.status || "disponible")}
+</span>
+
+<div class="info">
+
+
+ ${escapeHTML(p.quantity)} ${escapeHTML(p.unit || '')}<br>
+
+
+
+</div>
+
+<div class="price">
+${escapeHTML(p.price)} GNF
+</div>
+
+<button onclick="contactSeller('${escapeHTML(p.sellerPhone || "")}')">📞 Contacter
+</button>
+
+${currentUser && p.sellerId !== currentUser.uid && p.quantity > 0 ? `<button class="primary" onclick="promptBuy('${productDoc.id}', ${p.quantity}, '${escapeHTML(p.unit || "")}', '${escapeHTML(p.sellerPhone || "")}', ${p.price})">🛒 Acheter</button>` : ""}
+
+${
+currentUser &&
+p.sellerId === currentUser.uid
+?
+`<button
+class="danger"
+onclick="deleteProduct('${productDoc.id}')">🗑️ Supprimer
+</button>`
+:
+""
+}
+
+`;
+
+
+list.appendChild(div);
+
+});
+const countEl = document.getElementById((listId || "productsList") + "Count"); if(countEl) countEl.textContent = count + " produit" + (count > 1 ? "s" : "") + " trouvé" + (count > 1 ? "s" : "");
+
+
+if(count === 0) {
+
+list.innerHTML = `
+<div class="card">
+Aucun produit trouvé.
+</div>
+`;
+
+}
+
+}
+
+catch(error) {
+
+console.error(error);
+
+list.innerHTML =
+"<div class='card'>Impossible de charger les produits.</div>";
+
+}
+
+};
+
+
+window.deleteProduct = async function(id) {
+
+if(!confirm("Supprimer cette annonce ?"))
+return;
+
+
+try {
+
+await deleteDoc(
+doc(db,"products",id)
+);
+
+showMessage("Annonce supprimée.");
+
+await loadProducts();
+
+await updateStats();
+
+}
+
+catch(error) {
+
+showMessage("Suppression impossible.");
+
+}
+
+};
+
+window.promptBuy = function(productId, availableQty, unit, sellerPhone, unitPrice) {
+  const input = window.prompt("Quantite a acheter (disponible : " + availableQty + " " + unit + ")", "1");
+  if (input === null) return;
+  const qty = parseInt(input, 10);
+  if (isNaN(qty) || qty <= 0) {
+    showMessage("Quantite invalide.");
+    return;
+  }
+  if (qty > availableQty) {
+    showMessage("Quantite superieure au stock disponible (" + availableQty + " " + unit + ").");
+    return;
+  }
+  const payChoice = window.prompt("Mode de paiement : tapez 1 pour Mobile Money (Orange/MTN), 2 pour Especes a la livraison", "1");
+  if (payChoice === null) return;
+  const paymentMethod = payChoice.trim() === "2" ? "especes" : "mobile_money";
+  let paymentReference = "";
+  if (paymentMethod === "mobile_money") {
+    const total = qty * unitPrice;
+    window.alert("Envoyez " + total + " GNF via Orange Money au numero " + (sellerPhone || "du vendeur") + ", puis notez le code de transaction recu par SMS.");
+    const ref = window.prompt("Code de transaction Orange Money (vous pouvez le laisser vide et l'ajouter plus tard depuis 'Mes commandes')", "");
+    paymentReference = ref ? ref.trim() : "";
+  }
+  buyProduct(productId, qty, paymentMethod, paymentReference);
+};
+
+window.buyProduct = async function(productId, quantityToBuy = 1, paymentMethod = "mobile_money", paymentReference = "") {
+  const user = auth.currentUser;
+  if (!user) {
+    showMessage("Connectez-vous pour effectuer un achat.");
+    return;
+  }
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists() || (userSnap.data().role !== "acheteur" && userSnap.data().role !== "admin")) {
+      showMessage("Seuls les acheteurs peuvent effectuer un achat.");
+      return;
+    }
+    const buyerData = userSnap.data();
+
+    const productRef = doc(db, "products", productId);
+
+    let orderData;
+    await runTransaction(db, async (transaction) => {
+      const productSnap = await transaction.get(productRef);
+      if (!productSnap.exists()) {
+        throw new Error("Produit introuvable.");
+      }
+      const product = productSnap.data();
+      if (product.quantity < quantityToBuy) {
+        throw new Error("Quantite insuffisante en stock.");
+      }
+
+      transaction.update(productRef, {
+        quantity: product.quantity - quantityToBuy,
+        status: (product.quantity - quantityToBuy) <= 0 ? "vendu" : (product.status || "disponible")      });
+
+      orderData = {
+        productId: productId,
+        productName: product.name,
+        quantity: quantityToBuy,
+        unitPrice: product.price,
+        totalPrice: product.price * quantityToBuy,
+        buyerId: user.uid,
+        buyerName: buyerData.name || "",
+        buyerPhone: buyerData.phone || "",
+        sellerId: product.sellerId,
+        sellerName: product.sellerName,
+        paymentMethod: paymentMethod,
+        paymentStatus: "en attente",
+        paymentReference: paymentReference,
+        sellerPhone: product.sellerPhone,
+        status: "en attente",
+        createdAt: serverTimestamp()
+      };
+    });
+
+    await addDoc(collection(db, "orders"), orderData);
+
+    showMessage("Achat effectue avec succes !");
+    await loadProducts();
+  } catch (error) {
+    console.error(error);
+    showMessage("Erreur lors de l achat : " + error.message);
+  }
+};
+
+
+window.contactSeller = function(phone) {
+
+if(!phone) {
+
+showMessage("Numéro non renseigné.");
+
+return;
+
+}
+
+
+const clean =
+phone.replace(/\s+/g,"");
+
+
+window.open(
+"https://wa.me/" + clean,
+"_blank"
+);
+
+};
+
+
+window.updateStats = async function() {
+
+try {
+
+const products =
+await getDocs(
+query(collection(db,"products"), ...(currentProfile?.role === "admin" ? [] : [where("sellerId","==",currentUser.uid)]))
+);
+
+const users =
+await getDocs(
+collection(db,"users")
+);
+
+
+document
+.getElementById("statProducts")
+.innerText =
+products.size;
+
+
+document
+.getElementById("statUsers")
+.innerText =
+users.size;
+
+}
+
+catch(error) {
+
+console.error(error);
+
+}
+
+};
+
+
+window.showDashboard = function() {
+document.getElementById("myads")?.classList.add("hidden");
+        document.getElementById("orders")?.classList.add("hidden");
+
+document
+.getElementById("dashboard")
+.classList.remove("hidden");
+
+document
+.getElementById("marketplace")
+.classList.add("hidden");
+
+document
+.getElementById("publish")
+.classList.add("hidden");
+
+};
+
+
+window.showMarketplace = function() {
+document.getElementById("myads")?.classList.add("hidden");
+        document.getElementById("orders")?.classList.add("hidden");
+
+document
+.getElementById("dashboard")
+.classList.add("hidden");
+
+document
+.getElementById("marketplace")
+.classList.remove("hidden");
+
+document
+.getElementById("publish")
+.classList.add("hidden");
+
+loadProducts();
+
+};
+
+
+window.showPublish = function() {
+document.getElementById("myads")?.classList.add("hidden");
+        document.getElementById("orders")?.classList.add("hidden");
+
+document.getElementById("dashboard").classList.add("hidden");
+document.getElementById("marketplace").classList.add("hidden");
+document.getElementById("publish").classList.remove("hidden");
+};
+
+window.showOrders = function() {
+if(!currentUser) { showMessage("Vous devez etre connecte."); return; }
+document.getElementById("dashboard").classList.add("hidden");
+document.getElementById("marketplace").classList.add("hidden");
+document.getElementById("publish").classList.add("hidden");
+document.getElementById("myads")?.classList.add("hidden");
+document.getElementById("orders").classList.remove("hidden");
+loadOrders();
+};
+
+window.loadOrders = function() {
+const myList = document.getElementById("myOrdersList");
+const receivedList = document.getElementById("receivedOrdersList");
+if(!currentUser) return;
+if(myList) myList.innerHTML = "<div class='card'>Chargement...</div>";
+if(receivedList) receivedList.innerHTML = "<div class='card'>Chargement...</div>";
+if(window._ordersUnsubMy) { window._ordersUnsubMy(); window._ordersUnsubMy = null; }
+if(window._ordersUnsubReceived) { window._ordersUnsubReceived(); window._ordersUnsubReceived = null; }
+const myQuery = query(collection(db, "orders"), where("buyerId", "==", currentUser.uid));
+const receivedQuery = query(collection(db, "orders"), where("sellerId", "==", currentUser.uid));
+window._ordersUnsubMy = onSnapshot(myQuery, mySnapshot => {
+let myHtml = "";
+mySnapshot.forEach(orderDoc => {
+const o = orderDoc.data();
+const refBtn = (o.paymentMethod !== "especes" && o.paymentStatus === "en attente" && !o.paymentReference) ? `<button class="primary" onclick="addPaymentReference('${orderDoc.id}')">Ajouter reference de paiement</button>` : "";
+const refInfo = o.paymentReference ? `<p>Reference : ${escapeHTML(o.paymentReference)}</p>` : "";
+myHtml += `<div class="product"><h3>${escapeHTML(o.productName || "")}</h3><p>Quantite: ${o.quantity} - Prix total: ${o.totalPrice} GNF</p><p>Statut: ${escapeHTML(o.status || "")}</p><p>Paiement: ${o.paymentMethod === "especes" ? "Especes" : "Orange Money"} - ${escapeHTML(o.paymentStatus || "")}</p>${refInfo}${refBtn}</div>`;
+});
+if(myList) myList.innerHTML = myHtml || "<div class='card'>Aucune commande.</div>";
+}, error => {
+console.error(error);
+showMessage("Erreur lors du chargement des commandes : " + error.message);
+});
+window._ordersUnsubReceived = onSnapshot(receivedQuery, receivedSnapshot => {
+let receivedHtml = "";
+receivedSnapshot.forEach(orderDoc => {
+const o = orderDoc.data();
+const actionBtn = o.status === "en attente" ? `<button class="primary" onclick="updateOrderStatus('${orderDoc.id}', 'livre')">Marquer comme livre</button>` : "";
+const payBtn = o.paymentStatus === "en attente" ? `<button class="primary" onclick="updateOrderPayment('${orderDoc.id}')">Marquer comme paye</button>` : "";
+const sellerRefInfo = o.paymentReference ? `<p>Reference recue : ${escapeHTML(o.paymentReference)}</p>` : "";
+receivedHtml += `<div class="product"><h3>${escapeHTML(o.productName || "")}</h3><p>Quantite: ${o.quantity} - Prix total: ${o.totalPrice} GNF</p><p>Statut: ${escapeHTML(o.status || "")}</p><p>Paiement: ${o.paymentMethod === "especes" ? "Especes" : "Orange Money"} - ${escapeHTML(o.paymentStatus || "")}</p>${sellerRefInfo}${actionBtn}${payBtn}</div>`;
+});
+if(receivedList) receivedList.innerHTML = receivedHtml || "<div class='card'>Aucune commande recue.</div>";
+}, error => {
+console.error(error);
+showMessage("Erreur lors du chargement des commandes : " + error.message);
+});
+};
+
+window.updateOrderStatus = async function(orderId, newStatus) {
+if(!currentUser) { showMessage("Vous devez etre connecte."); return; }
+try {
+await setDoc(doc(db, "orders", orderId), { status: newStatus }, { merge: true });
+showMessage("Statut mis a jour.");
+} catch(error) {
+console.error(error);
+showMessage("Erreur lors de la mise a jour : " + error.message);
+}
+};
+
+window.updateOrderPayment = async function(orderId) {
+if(!currentUser) { showMessage("Vous devez etre connecte."); return; }
+try {
+await setDoc(doc(db, "orders", orderId), { paymentStatus: "paye" }, { merge: true });
+showMessage("Paiement marque comme recu.");
+} catch(error) {
+console.error(error);
+showMessage("Erreur lors de la mise a jour du paiement : " + error.message);
+}
+};
+
+window.addPaymentReference = async function(orderId) {
+  if(!currentUser) { showMessage("Vous devez etre connecte."); return; }
+  const ref = window.prompt("Entrez le code de transaction Orange Money recu par SMS", "");
+  if (ref === null || ref.trim() === "") return;
+  try {
+    await setDoc(doc(db, "orders", orderId), { paymentReference: ref.trim() }, { merge: true });
+    showMessage("Reference enregistree.");
+  } catch(error) {
+    console.error(error);
+    showMessage("Erreur : " + error.message);
+  }
+};
+
+window.showMyAds = function() {
+if(!currentUser) { showMessage("Vous devez etre connecte."); return; }
+document.getElementById("dashboard").classList.add("hidden");
+document.getElementById("marketplace").classList.add("hidden");
+document.getElementById("publish").classList.add("hidden");
+document.getElementById("myads").classList.remove("hidden");
+  document.getElementById("orders")?.classList.add("hidden");
+loadProducts("myAdsList", true);
+};
+
+
+
+
+function escapeHTML(value) {
+
+return String(value || "")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+
+showDashboard();
+
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+
+</html>

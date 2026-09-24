@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration - AgriNova</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#f4f6f5;margin:0}
+header{background:#1b5e20;color:white;padding:18px;display:flex;align-items:center;justify-content:space-between}
+header h1{margin:0;font-size:20px}
+#logoutBtn{background:white;color:#1b5e20;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+.container{max-width:950px;margin:auto;padding:18px}
+.card{background:white;border-radius:14px;padding:16px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 6px;border-bottom:1px solid #eee}
+th{color:#1b5e20}
+select{padding:6px;border-radius:8px;border:1px solid #ccc}
+.badge{padding:3px 8px;border-radius:20px;font-size:12px}
+.badge.admin{background:#ffe0b2;color:#e65100}
+.badge.producteur{background:#c8e6c9;color:#1b5e20}
+.badge.acheteur{background:#bbdefb;color:#0d47a1}
+.badge.transporteur{background:#e1bee7;color:#4a148c}
+#msg{padding:10px;border-radius:8px;margin-bottom:12px;display:none}
+#msg.ok{background:#c8e6c9;display:block}
+#msg.err{background:#ffcdd2;display:block}
+#loading, #denied{text-align:center;padding:40px}
+.hidden{display:none}
+button{cursor:pointer;padding:6px 10px;border-radius:8px;border:1px solid #ccc;background:#f8f8f8}
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.toolbar select{padding:8px}
+.count-badge{background:#e8f5e9;color:#1b5e20;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Administration AgriNova</h1>
+    <a href="index.html" style="color:#fff;text-decoration:none;margin-right:12px;">← Accueil</a>
+  <button id="logoutBtn">Déconnexion</button>
+</header>
+
+<div class="container">
+
+<div id="loading">Chargement...</div>
+
+<div id="denied" class="hidden">
+  <p>Acces refuse. Cette page est reservee aux administrateurs.</p>
+</div>
+
+<div id="adminPanel" class="hidden">
+  <div id="msg"></div>
+
+  <div class="card">
+    <h2>Utilisateurs</h2>
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Email</th><th>Ville</th><th>Role</th><th>Modifier</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="usersTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Produits</h2>
+    <div class="toolbar">
+      <span class="count-badge" id="productsCount">0 produit(s)</span>
+      <select id="statusFilter">
+        <option value="all">Tous les statuts</option>
+        <option value="disponible">Disponible</option>
+        <option value="vendu">Vendu</option>
+        <option value="indisponible">Indisponible</option>
+    </select>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Qté</th><th>Prix</th><th>Lieu</th><th>Catégorie</th><th>Vendeur</th><th>Statut</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="productsTableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const loadingEl = document.getElementById("loading");
+const deniedEl = document.getElementById("denied");
+const panelEl = document.getElementById("adminPanel");
+const msgEl = document.getElementById("msg");
+const tbody = document.getElementById("usersTableBody");
+const productsTbody = document.getElementById("productsTableBody");
+const statusFilter = document.getElementById("statusFilter");
+const productsCount = document.getElementById("productsCount");
+const logoutBtn = document.getElementById("logoutBtn");
+
+let allProducts = [];
+
+function showMessage(text, type) {
+  msgEl.textContent = text;
+  msgEl.className = type;
+  setTimeout(() => { msgEl.className = ""; }, 3000);
+}
+
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "index.html";
+});
+
+async function loadUsers() {
+  tbody.innerHTML = "";
+  const snapshot = await getDocs(collection(db, "users"));
+  snapshot.forEach(docSnap => {
+    const u = docSnap.data();
+    const uid = docSnap.id;
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${u.name || "-"}</td>
+      <td>${u.email || "-"}</td>
+      <td>${u.location || "-"}</td>
+      <td><span class="badge ${u.role || ""}">${u.role || "-"}</span></td>
+      <td>
+        <select data-uid="${uid}">
+          <option value="producteur" ${u.role === "producteur" ? "selected" : ""}>Producteur</option>
+          <option value="acheteur" ${u.role === "acheteur" ? "selected" : ""}>Acheteur</option>
+          <option value="transporteur" ${u.role === "transporteur" ? "selected" : ""}>Transporteur</option>
+          <option value="admin" ${u.role === "admin" ? "selected" : ""}>Admin</option>
+        </select>
+      </td
+<td>
+        <button class="btn-delete" data-uid="${uid}">Supprimer</button>
+      </td>>
+    `;
+    tbody.appendChild(tr);
+  });
+tbody.querySelectorAll(".btn-delete").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const uid = btn.dataset.uid;
+      if (!confirm("Supprimer cet utilisateur ?")) return;
+      try {
+        await deleteDoc(doc(db, "users", uid));
+        showMessage("Utilisateur supprime avec succes.", "ok");
+        loadUsers();
+      } catch (err) {
+        showMessage("Erreur: " + err.message, "err");
+      }
+    });
+  });
+
+  tbody.querySelectorAll("select").forEach(select => {
+    select.addEventListener("change", async (e) => {
+      const uid = e.target.getAttribute("data-uid");
+      const newRole = e.target.value;
+      try {
+        await updateDoc(doc(db, "users", uid), { role: newRole });
+        showMessage("Role mis a jour avec succes.", "ok");
+        loadUsers();
+      } catch (err) {
+        showMessage("Erreur: " + err.message, "err");
+      }
+    });
+  });
+}
+
+function renderProducts(list) {
+  productsTbody.innerHTML = "";
+  productsCount.textContent = `${list.length} produit(s)`;
+
+  list.forEach(({ pid, p }) => {
+    if (p.quantity <= 0) { p.status = "vendu"; }    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${p.name || "-"}</td>
+      <td>${p.quantity ?? "-"}</td>
+      <td>${p.price ?? "-"}</td>
+      <td>${p.location || "-"}</td>
+      <td>${p.category || "-"}</td>
+      <td>${p.sellerName || "-"}</td>
+      <td>
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:${p.status === "disponible" ? "#2e7d32" : p.status === "vendu" ? "#c62828" : "#9e9e9e"}"></span><select data-pid="${pid}">
+          <option value="disponible" ${p.status === "disponible" ? "selected" : ""}>Disponible</option>
+          <option value="vendu" ${p.status === "vendu" ? "selected" : ""}>Vendu</option>
+          <option value="indisponible" ${p.status === "indisponible" ? "selected" : ""}>Indisponible</option>
+        </select>
+      </td>
+      <td><button class="delete-product" data-pid="${pid}">Supprimer</button></td>
+    `;
+    productsTbody.appendChild(tr);
+  });
+
+  productsTbody.querySelectorAll("select").forEach(select => {
+    select.addEventListener("change", async (e) => {
+      const pid = e.target.getAttribute("data-pid");
+      const newStatus = e.target.value;
+      try {
+        await updateDoc(doc(db, "products", pid), { status: newStatus });
+        showMessage("Statut mis a jour avec succes.", "ok");
+        loadProducts();
+      } catch (err) {
+        showMessage("Erreur: " + err.message, "err");
+      }
+    });
+  });
+
+  productsTbody.querySelectorAll(".delete-product").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const pid = e.target.getAttribute("data-pid");
+      if (!confirm("Supprimer ce produit ?")) return;
+      try {
+        await deleteDoc(doc(db, "products", pid));
+        showMessage("Produit supprime.", "ok");
+        loadProducts();
+      } catch (err) {
+        showMessage("Erreur: " + err.message, "err");
+      }
+    });
+  });
+}
+
+async function loadProducts() {
+  const snapshot = await getDocs(collection(db, "products"));
+  allProducts = [];
+  snapshot.forEach(docSnap => {
+    allProducts.push({ pid: docSnap.id, p: docSnap.data() });
+    const _last = allProducts[allProducts.length - 1].p; if (_last.quantity <= 0) _last.status = "vendu";  });
+  applyFilter();
+}
+
+function applyFilter() {
+  const filterValue = statusFilter.value;
+  const filtered = filterValue === "all"
+    ? allProducts
+    : allProducts.filter(({ p }) => p.status === filterValue);
+  renderProducts(filtered);
+}
+
+statusFilter.addEventListener("change", applyFilter);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    loadingEl.classList.add("hidden");
+    deniedEl.classList.remove("hidden");
+    deniedEl.innerHTML = "<p>Vous devez etre connecte. <a href='index.html'>Retour a la connexion</a></p>";
+    return;
+  }
+
+  const userDoc = await getDoc(doc(db, "users", user.uid));
+  const role = userDoc.exists() ? userDoc.data().role : null;
+
+  if (role !== "admin") {
+    loadingEl.classList.add("hidden");
+    deniedEl.classList.remove("hidden");
+    return;
+  }
+
+  loadingEl.classList.add("hidden");
+  panelEl.classList.remove("hidden");
+  loadUsers();
+  loadProducts();
+});
+</script>
+
+</body>
+</html>
